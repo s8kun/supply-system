@@ -1,0 +1,46 @@
+services:
+  - type: web
+    name: supply-system-backend
+    env: docker
+    region: frankfurt
+    plan: free
+    rootDir: backend
+    dockerContext: backend
+    healthCheckPath: /
+    envVars:
+      - key: APP_KEY
+        generateValue: true
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      - key: APP_URL
+        value: https://supply-system-backend.onrender.com
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_HOST
+        fromDatabase:
+          name: supply-system-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: supply-system-db
+          property: port
+      - key: DB_DATABASE
+        fromDatabase:
+          name: supply-system-db
+          property: database
+      - key: DB_USERNAME
+        fromDatabase:
+          name: supply-system-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: supply-system-db
+          property: password
+
+databases:
+  - name: supply-system-db
+    databaseName: supply_system
+    user: supply_user
+    plan: free # Postgres is free on Render
