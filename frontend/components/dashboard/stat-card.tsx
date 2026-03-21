@@ -1,0 +1,51 @@
+"use client";
+
+import type { LucideIcon } from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { cn } from "@/lib/utils";
+
+type StatCardProps = {
+  title: string;
+  value: string;
+  description: string;
+  icon: LucideIcon;
+  tone?: "default" | "warning" | "success";
+};
+
+const toneClassMap: Record<NonNullable<StatCardProps["tone"]>, string> = {
+  default: "text-muted-foreground",
+  warning: "text-amber-600",
+  success: "text-emerald-600",
+};
+
+export function StatCard({
+  title,
+  value,
+  description,
+  icon: Icon,
+  tone = "default",
+}: StatCardProps) {
+  return (
+    <Card className="hover:shadow-md transition-shadow">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <CardTitle className="text-sm font-medium">{title}</CardTitle>
+        <div className={cn("p-2 rounded-full", {
+          "bg-emerald-100 text-emerald-600 dark:bg-emerald-900/20 dark:text-emerald-500": tone === "success",
+          "bg-amber-100 text-amber-600 dark:bg-amber-900/20 dark:text-amber-500": tone === "warning",
+          "bg-muted text-muted-foreground": tone === "default",
+        })}>
+          <Icon className="h-4 w-4" />
+        </div>
+      </CardHeader>
+      <CardContent>
+        <div className="text-2xl font-bold">{value}</div>
+        <p className="text-xs text-muted-foreground mt-1">{description}</p>
+      </CardContent>
+    </Card>
+  );
+}

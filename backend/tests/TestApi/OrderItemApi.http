@@ -1,0 +1,22 @@
+@baseUrl = http://localhost:8000/api/v1
+@orderItemId = 1
+
+### List order items
+GET {{baseUrl}}/order-items
+Accept: application/json
+Authorization: Bearer {{token}}
+
+### Show order item
+GET {{baseUrl}}/order-items/{{orderItemId}}
+Accept: application/json
+Authorization: Bearer {{token}}
+
+### Deliver order item
+PATCH {{baseUrl}}/order-items/{{orderItemId}}
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{token}}
+
+{
+  "deliveryStatus": "delivered"
+}

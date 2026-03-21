@@ -1,0 +1,48 @@
+@baseUrl = http://localhost:8000/api/v1
+@orderId = 1
+@customerId = 1
+
+### List orders
+GET {{baseUrl}}/orders
+Accept: application/json
+Authorization: Bearer {{token}}
+
+### Create order
+POST {{baseUrl}}/orders
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{token}}
+
+{
+  "customerId": {{customerId}},
+  "dueDate": "2026-02-10",
+  "items": [
+    { "productId": 1, "quantity": 2 },
+    { "productId": 2, "quantity": 1 }
+  ]
+}
+
+### Show order
+GET {{baseUrl}}/orders/{{orderId}}
+Accept: application/json
+Authorization: Bearer {{token}}
+
+### Update order
+PATCH {{baseUrl}}/orders/{{orderId}}
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{token}}
+
+{
+  "dueDate": "2026-02-12"
+}
+
+### Delete order
+DELETE {{baseUrl}}/orders/{{orderId}}
+Accept: application/json
+Authorization: Bearer {{token}}
+
+### Cancel order
+POST {{baseUrl}}/orders/{{orderId}}/cancel
+Accept: application/json
+Authorization: Bearer {{token}}

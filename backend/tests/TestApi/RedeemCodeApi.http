@@ -1,0 +1,34 @@
+@baseUrl = http://localhost:8000/api/v1
+@customerId = 1
+
+### Create redeem code
+POST {{baseUrl}}/redeem-codes
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{token}}
+
+{
+  "amount": 150.00
+}
+
+### Redeem code (replace code value)
+POST {{baseUrl}}/redeem-codes/redeem
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{token}}
+
+{
+  "customerId": {{customerId}},
+  "code": "PASTE_CODE_HERE"
+}
+
+### Redeem code again (should fail)
+POST {{baseUrl}}/redeem-codes/redeem
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{token}}
+
+{
+  "customerId": {{customerId}},
+  "code": "PASTE_CODE_HERE"
+}

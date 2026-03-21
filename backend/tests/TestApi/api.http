@@ -1,0 +1,50 @@
+@baseUrl = http://localhost:8000/api/v1
+@customerId = 1
+
+### List customers
+GET {{baseUrl}}/customers
+Accept: application/json
+Authorization: Bearer {{token}}
+
+### Create customer
+POST {{baseUrl}}/customers
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "Ahmed Ali Hassan",
+  "email": "ahmed.customer@example.com",
+  "password": "password123",
+  "passwordConfirmation": "password123",
+  "firstName": "Ahmed",
+  "middleName": "Ali",
+  "lastName": "Hassan",
+  "houseNo": "12",
+  "streetName": "King Road",
+  "city": "Riyadh",
+  "zipCode": "11564",
+  "phone": "0551234567",
+  "creditLimit": 5000.00
+}
+
+### Show customer
+GET {{baseUrl}}/customers/{{customerId}}
+Accept: application/json
+Authorization: Bearer {{token}}
+
+### Update customer
+PUT {{baseUrl}}/customers/{{customerId}}
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{token}}
+
+{
+  "phone": "0559998888",
+  "creditLimit": 7500.00
+}
+
+### Delete customer
+DELETE {{baseUrl}}/customers/{{customerId}}
+Accept: application/json
+Authorization: Bearer {{token}}

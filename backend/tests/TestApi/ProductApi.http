@@ -1,0 +1,61 @@
+@baseUrl = http://localhost:8000/api/v1
+@productId = 1
+
+### List products
+GET {{baseUrl}}/products
+Accept: application/json
+Authorization: Bearer {{token}}
+
+### Create product
+POST {{baseUrl}}/products
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{token}}
+
+{
+    "name": "Samsung Galaxy A55",
+    "description": "Smartphone with 5G, 128GB storage, and 8GB RAM",
+    "costPrice": 950.00,
+    "sellPrice": 1200.00,
+    "currentQuantity": 50,
+    "reorderLevel": 10,
+    "reorderQuantity": 30
+}
+
+### Create product with image (multipart)
+POST {{baseUrl}}/products
+Content-Type: multipart/form-data
+Accept: application/json
+Authorization: Bearer {{token}}
+
+name=Samsung Galaxy A55
+description=Smartphone with 5G, 128GB storage, and 8GB RAM
+costPrice=950.00
+sellPrice=1200.00
+currentQuantity=50
+reorderLevel=10
+reorderQuantity=30
+images[]=@/path/to/image1.jpg
+images[]=@/path/to/image2.jpg
+images[]=@/path/to/image3.jpg
+
+
+### Show product
+GET {{baseUrl}}/products/{{productId}}
+Accept: application/json
+Authorization: Bearer {{token}}
+
+### Update product
+PUT {{baseUrl}}/products/{{productId}}
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{token}}
+
+{
+    "name": "Samsung Galaxy A54"
+}
+
+### Delete product
+DELETE {{baseUrl}}/products/{{productId}}
+Accept: application/json
+Authorization: Bearer {{token}}
