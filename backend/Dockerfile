@@ -55,12 +55,22 @@ RUN composer install --no-dev --optimize-autoloader --prefer-dist
 # Build frontend (لو عندك package.json)
 RUN if [ -f package.json ]; then npm ci && npm run build; fi
 
-# Fix permissions (Laravel)
-RUN chown -R www-data:www-data storage bootstrap/cache || true
+# 🔥🔥🔥 الحل الحقيقي هنا
+# Create Laravel directories + permissions
+RUN mkdir -p storage/framework/views \
+    storage/framework/cache \
+    storage/framework/sessions \
+    bootstrap/cache \
+    && chmod -R 777 storage bootstrap/cache \
+    && chown -R www-data:www-data storage bootstrap/cache
+
+# Clear caches (مهم)
+RUN php artisan config:clear || true \
+    && php artisan cache:clear || true \
+    && php artisan view:clear || true
 
 # Expose port
 EXPOSE 80
 
-# Run Apache مباشرة
+# Run Apache
 CMD ["apache2-foreground"]
-

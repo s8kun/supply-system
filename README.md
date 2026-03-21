@@ -11,7 +11,7 @@ This repository contains:
 
 ## Architecture
 
-- **Backend:** PHP 8.2+, Laravel 12, Sanctum, MySQL/SQLite (PostgreSQL in Render deployment), queue/scheduler support
+- **Backend:** PHP 8.4+, Laravel 12, Sanctum, MySQL/SQLite (PostgreSQL in Render deployment), queue/scheduler support
 - **Frontend:** Next.js 16 (App Router), React 19, TypeScript, React Query, React Hook Form, Zod, shadcn/ui
 
 ---
@@ -117,4 +117,3 @@ http://localhost:3000
 ## Deployment
 
 `render.yaml` contains Render configuration for backend + PostgreSQL deployment.
-
