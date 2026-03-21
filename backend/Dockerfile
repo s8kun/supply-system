@@ -63,3 +63,4 @@ EXPOSE 80
 
 # Run Apache مباشرة
 CMD ["apache2-foreground"]
+
