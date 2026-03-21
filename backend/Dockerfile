@@ -7,12 +7,14 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     libonig-dev \
     libxml2-dev \
+    libpq-dev \
     zip \
     unzip \
     libzip-dev \
     libicu-dev \
     libjpeg-dev \
-    libfreetype6-dev     gnupg \
+    libfreetype6-dev \
+    gnupg \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install Node.js (needed for npm build)
@@ -20,7 +22,7 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs
 
 # Install PHP extensions
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath zip intl \
+RUN docker-php-ext-install pdo_mysql pdo_pgsql mbstring exif pcntl bcmath zip intl \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install gd
 
