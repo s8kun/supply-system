@@ -15,24 +15,30 @@ RUN apt-get update && apt-get install -y \
     libjpeg-dev \
     libfreetype6-dev \
     gnupg \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-# Install Node.js (needed for npm build)
+# Install Node.js
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
-    && apt-get install -y nodejs
+    && apt-get update \
+    && apt-get install -y nodejs \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install PHP extensions
 RUN docker-php-ext-install pdo_mysql pdo_pgsql mbstring exif pcntl bcmath zip intl \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install gd
 
-# Enable Apache rewrite module
+# Enable Apache rewrite
 RUN a2enmod rewrite
 
-# Update Apache DocumentRoot to point to /public
-ENV APACHE_DOCUMENT_ROOT /var/www/html/public
-RUN sed -ri -e 's!/var/www/html!!g' /etc/apache2/sites-available/*.conf
-RUN sed -ri -e 's!/var/www/!!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
+# Set Apache document root to /public
+ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
+RUN sed -ri "s!/var/www/html!${APACHE_DOCUMENT_ROOT}!g" \
+    /etc/apache2/sites-available/*.conf \
+    /etc/apache2/apache2.conf \
+    /etc/apache2/conf-available/*.conf
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -40,23 +46,20 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /var/www/html
 
-# Copy application files (excluding .dockerignore files)
+# Copy project files
 COPY . .
 
-# Install Composer dependencies (production optimized)
-RUN composer install --no-dev --optimize-autoloader --no-scripts --prefer-dist
+# Install PHP dependencies
+RUN composer install --no-dev --optimize-autoloader --prefer-dist
 
-# Build frontend assets
-RUN npm ci && npm run build
+# Build frontend (لو عندك package.json)
+RUN if [ -f package.json ]; then npm ci && npm run build; fi
 
-# Set permissions
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+# Fix permissions (Laravel)
+RUN chown -R www-data:www-data storage bootstrap/cache || true
 
-# Copy entrypoint script
-COPY docker/start.sh /usr/local/bin/start.sh
-RUN chmod +x /usr/local/bin/start.sh
-
-# Expose port 80 (Apache default)
+# Expose port
 EXPOSE 80
 
-CMD ["/usr/local/bin/start.sh"]
+# Run Apache مباشرة
+CMD ["apache2-foreground"]
