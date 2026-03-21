@@ -1,36 +1,124 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Supply System Frontend
+
+Frontend application for the Supply System project, built with Next.js App Router.
+
+It provides role-based dashboards and workflows for:
+
+- **Admin:** customer management, reorder notices, reporting, full system control
+- **Supervisor:** product and fulfillment operations, redeem code generation, reports
+- **Customer:** registration/login, product browsing, order placement, code redemption
+
+---
+
+## Tech Stack
+
+- Next.js 16
+- React 19 + TypeScript
+- TanStack React Query
+- React Hook Form + Zod
+- shadcn/ui + Tailwind CSS
+- `nuqs` for URL query-state synchronization (for list search filters)
+
+---
+
+## Key Features
+
+- Authentication via backend Sanctum token (stored through frontend auth routes)
+- Role-aware routing and dashboards
+- Customer profile and credit visibility
+- Product browsing and management flows
+- Order creation, delivery tracking, and payment status UI
+- Redeem code generation/redeeming flows
+- Reorder notices and fulfillment reporting views
+- Global topbar search that maps to list-page `q` filters
+
+---
+
+## Project Structure
+
+```text
+frontend/
+├── app/                    # Next.js routes (App Router)
+│   ├── api/                # Route handlers (auth + backend proxy)
+│   ├── customers/
+│   ├── products/
+│   ├── orders/
+│   ├── order-items/
+│   ├── redeem-codes/
+│   └── reorder-notices/
+├── components/             # UI and layout components
+├── features/               # Domain API wrappers and schemas
+├── hooks/                  # Reusable hooks
+├── lib/                    # Auth, API, utilities, generated models
+└── types/                  # Shared app types
+```
+
+---
+
+## Environment
+
+Create `.env.local` (or copy from `.env.example`):
+
+```env
+LARAVEL_API_URL=http://localhost:8000/api/v1
+```
+
+This URL must point to the running backend API.
+
+---
 
 ## Getting Started
 
-First, run the development server:
+Install dependencies:
+
+```bash
+npm install
+```
+
+Start development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```text
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## Available Scripts
 
-To learn more about Next.js, take a look at the following resources:
+- `npm run dev` — run development server
+- `npm run build` — create production build
+- `npm run start` — run production server
+- `npm run lint` — run ESLint
+- `npm run generate:api` — regenerate typed API client/models from OpenAPI config
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Backend Integration Notes
 
-## Deploy on Vercel
+- Auth routes:
+  - `/api/auth/login`
+  - `/api/auth/register`
+  - `/api/auth/me`
+  - `/api/auth/logout`
+- Generic backend proxy route:
+  - `/api/proxy/[...path]`
+- The proxy injects the current session token into `Authorization: Bearer <token>` for protected backend calls.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Role Navigation Defaults
+
+Current default home pages by role:
+
+- `admin` → `/customers`
+- `supervisor` → `/products`
+- `customer` → `/`
+
+Defined in: `lib/auth/roles.ts`
+
