@@ -39,8 +39,13 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-# ai
-.agents
-.codex
-.github
+# AI & agents — ignore common AI agent files and folders
+.agents/
+.agent*
+.codex/
+.codex*
 .specify
+.openai/
+*.agent*
+.ai
+.ai/
