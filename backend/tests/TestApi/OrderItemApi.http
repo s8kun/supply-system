@@ -18,5 +18,15 @@ Accept: application/json
 Authorization: Bearer {{token}}
 
 {
-  "deliveryStatus": "delivered"
+  "deliveredQuantity": 1
+}
+
+### Deliver remaining quantity (cumulative value)
+PATCH {{baseUrl}}/order-items/{{orderItemId}}
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{token}}
+
+{
+  "deliveredQuantity": 2
 }

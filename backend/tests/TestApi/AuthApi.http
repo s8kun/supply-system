@@ -11,7 +11,7 @@ Accept: application/json
   "name": "Customer Name",
   "email": "{{customerEmail}}",
   "password": "{{customerPassword}}",
-  "passwordConfirmation": "{{customerPassword}}",
+  "password_confirmation": "{{customerPassword}}",
   "firstName": "Ahmed",
   "middleName": "Ali",
   "lastName": "Hassan",

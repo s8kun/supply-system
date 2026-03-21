@@ -46,3 +46,13 @@ Authorization: Bearer {{token}}
 POST {{baseUrl}}/orders/{{orderId}}/cancel
 Accept: application/json
 Authorization: Bearer {{token}}
+
+### Mark order as paid
+POST {{baseUrl}}/orders/{{orderId}}/mark-paid
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{token}}
+
+{
+  "isPaid": true
+}

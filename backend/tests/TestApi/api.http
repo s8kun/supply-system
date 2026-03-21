@@ -16,7 +16,7 @@ Authorization: Bearer {{token}}
   "name": "Ahmed Ali Hassan",
   "email": "ahmed.customer@example.com",
   "password": "password123",
-  "passwordConfirmation": "password123",
+  "password_confirmation": "password123",
   "firstName": "Ahmed",
   "middleName": "Ali",
   "lastName": "Hassan",
@@ -46,5 +46,10 @@ Authorization: Bearer {{token}}
 
 ### Delete customer
 DELETE {{baseUrl}}/customers/{{customerId}}
+Accept: application/json
+Authorization: Bearer {{token}}
+
+### Orders fulfillment report (today by default)
+GET {{baseUrl}}/reports/fulfillment
 Accept: application/json
 Authorization: Bearer {{token}}

@@ -1,0 +1,11 @@
+@baseUrl = http://localhost:8000/api/v1
+
+### Orders fulfillment report (today range by default)
+GET {{baseUrl}}/reports/fulfillment
+Accept: application/json
+Authorization: Bearer {{token}}
+
+### Orders fulfillment report (custom date range)
+GET {{baseUrl}}/reports/fulfillment?fromDate=2026-03-01&toDate=2026-03-31
+Accept: application/json
+Authorization: Bearer {{token}}
