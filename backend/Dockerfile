@@ -56,11 +56,13 @@ RUN composer install --no-dev --optimize-autoloader --prefer-dist
 RUN if [ -f package.json ]; then npm ci && npm run build; fi
 
 # 🔥🔥🔥 الحل الحقيقي هنا
-# Create Laravel directories + permissions
+# Create Laravel directories + logs + permissions
 RUN mkdir -p storage/framework/views \
     storage/framework/cache \
     storage/framework/sessions \
+    storage/logs \
     bootstrap/cache \
+    && touch storage/logs/laravel.log \
     && chmod -R 777 storage bootstrap/cache \
     && chown -R www-data:www-data storage bootstrap/cache
 
