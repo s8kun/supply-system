@@ -6,3 +6,14 @@ build
 .idea
 .vscode
 coverage
+
+# AI & agents — ignore common AI agent files and folders
+.agents/
+.agent*
+.codex/
+.codex*
+.specify
+.openai/
+*.agent*
+.ai
+.ai/
