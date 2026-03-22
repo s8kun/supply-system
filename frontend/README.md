@@ -23,7 +23,7 @@ It provides role-based dashboards and workflows for:
 
 ## Key Features
 
-- Authentication via backend Sanctum token (stored through frontend auth routes)
+- Authentication via backend Sanctum token (stored in browser `localStorage`)
 - Role-aware routing and dashboards
 - Customer profile and credit visibility
 - Product browsing and management flows
@@ -39,7 +39,6 @@ It provides role-based dashboards and workflows for:
 ```text
 frontend/
 ├── app/                    # Next.js routes (App Router)
-│   ├── api/                # Route handlers (auth + backend proxy)
 │   ├── customers/
 │   ├── products/
 │   ├── orders/
@@ -60,7 +59,7 @@ frontend/
 Create `.env.local` (or copy from `.env.example`):
 
 ```env
-LARAVEL_API_URL=http://localhost:8000/api/v1
+NEXT_PUBLIC_LARAVEL_API_URL=http://localhost:8000/api/v1
 ```
 
 This URL must point to the running backend API.
@@ -101,14 +100,9 @@ http://localhost:3000
 
 ## Backend Integration Notes
 
-- Auth routes:
-  - `/api/auth/login`
-  - `/api/auth/register`
-  - `/api/auth/me`
-  - `/api/auth/logout`
-- Generic backend proxy route:
-  - `/api/proxy/[...path]`
-- The proxy injects the current session token into `Authorization: Bearer <token>` for protected backend calls.
+- Frontend calls Laravel endpoints directly using `NEXT_PUBLIC_LARAVEL_API_URL`.
+- Auth token is saved as `scs_access_token` in browser `localStorage`.
+- Protected requests send `Authorization: Bearer <token>` from the client.
 
 ---
 
@@ -121,4 +115,3 @@ Current default home pages by role:
 - `customer` → `/`
 
 Defined in: `lib/auth/roles.ts`
-

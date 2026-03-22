@@ -16,6 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { getRoleHome } from "@/lib/auth/guards";
+import { apiFetch, setStoredSessionToken } from "@/lib/api/client";
 import { loginSchema, type LoginValues } from "@/features/auth/schemas";
 import { useAuthSession } from "@/hooks/use-auth-session";
 
@@ -25,6 +26,7 @@ type LoginResponse = {
     user: {
       role: "admin" | "supervisor" | "customer";
     };
+    token?: string;
   };
 };
 
@@ -45,10 +47,11 @@ export default function LoginPage() {
   });
 
   const onSubmit = handleSubmit(async (values) => {
-    const response = await fetch("/api/auth/login", {
+    const response = await apiFetch("/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(values),
+      withAuth: false,
     });
 
     const payload = await response.json();
@@ -63,6 +66,9 @@ export default function LoginPage() {
     }
 
     const data = payload as LoginResponse;
+    if (data.data.token) {
+      setStoredSessionToken(data.data.token);
+    }
     await refreshSession();
     router.replace(getRoleHome(data.data.user.role));
   });

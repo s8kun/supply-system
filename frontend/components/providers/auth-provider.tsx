@@ -2,6 +2,7 @@
 
 import { createContext, useCallback, useContext, useMemo } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { apiFetch, clearStoredSessionToken } from "@/lib/api/client";
 import type { UserSummary } from "@/types/api";
 
 type AuthStatus = "loading" | "authenticated" | "guest";
@@ -23,8 +24,11 @@ type MeResponse = {
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 async function fetchMe() {
-  const response = await fetch("/api/auth/me", { cache: "no-store" });
+  const response = await apiFetch("/auth/me", { cache: "no-store" });
   if (!response.ok) {
+    if (response.status === 401) {
+      clearStoredSessionToken();
+    }
     return null;
   }
 
@@ -46,7 +50,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [sessionQuery]);
 
   const logout = useCallback(async () => {
-    await fetch("/api/auth/logout", { method: "POST" });
+    await apiFetch("/auth/logout", { method: "POST" });
+    clearStoredSessionToken();
     queryClient.setQueryData(["auth", "me"], null);
   }, [queryClient]);
 

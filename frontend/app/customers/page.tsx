@@ -13,11 +13,7 @@ import { LoadingState } from "@/components/feedback/loading-state";
 import { EmptyState } from "@/components/feedback/empty-state";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -63,6 +59,7 @@ import {
   formatCurrency,
 } from "@/features/customer/api";
 import { MoreHorizontal, Plus, Search, Trash2, User } from "lucide-react";
+import { refresh } from "next/cache";
 
 const createCustomerSchema = z
   .object({
@@ -133,7 +130,8 @@ export default function CustomersPage() {
     },
     onError: (error) => {
       setError("root", {
-        message: (error as Error).message || "Unable to create customer account",
+        message:
+          (error as Error).message || "Unable to create customer account",
       });
     },
   });
@@ -185,6 +183,7 @@ export default function CustomersPage() {
 
   const onCreateSubmit = handleSubmit(async (values) => {
     await createMutation.mutateAsync(values);
+    refresh();
   });
 
   return (
@@ -227,13 +226,19 @@ export default function CustomersPage() {
                       <Label htmlFor="email">Email</Label>
                       <Input id="email" type="email" {...register("email")} />
                       {errors.email && (
-                        <p className="text-xs text-destructive font-medium">{errors.email.message}</p>
+                        <p className="text-xs text-destructive font-medium">
+                          {errors.email.message}
+                        </p>
                       )}
                     </div>
 
                     <div className="space-y-2">
                       <Label htmlFor="password">Password</Label>
-                      <Input id="password" type="password" {...register("password")} />
+                      <Input
+                        id="password"
+                        type="password"
+                        {...register("password")}
+                      />
                       {errors.password && (
                         <p className="text-xs text-destructive font-medium">
                           {errors.password.message}
@@ -242,7 +247,9 @@ export default function CustomersPage() {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="passwordConfirmation">Confirm Password</Label>
+                      <Label htmlFor="passwordConfirmation">
+                        Confirm Password
+                      </Label>
                       <Input
                         id="passwordConfirmation"
                         type="password"
@@ -289,7 +296,9 @@ export default function CustomersPage() {
                       <Label htmlFor="phone">Phone</Label>
                       <Input id="phone" type="tel" {...register("phone")} />
                       {errors.phone && (
-                        <p className="text-xs text-destructive font-medium">{errors.phone.message}</p>
+                        <p className="text-xs text-destructive font-medium">
+                          {errors.phone.message}
+                        </p>
                       )}
                     </div>
 
@@ -297,7 +306,9 @@ export default function CustomersPage() {
                       <Label htmlFor="houseNo">House Number</Label>
                       <Input id="houseNo" {...register("houseNo")} />
                       {errors.houseNo && (
-                        <p className="text-xs text-destructive font-medium">{errors.houseNo.message}</p>
+                        <p className="text-xs text-destructive font-medium">
+                          {errors.houseNo.message}
+                        </p>
                       )}
                     </div>
 
@@ -315,7 +326,9 @@ export default function CustomersPage() {
                       <Label htmlFor="city">City</Label>
                       <Input id="city" {...register("city")} />
                       {errors.city && (
-                        <p className="text-xs text-destructive font-medium">{errors.city.message}</p>
+                        <p className="text-xs text-destructive font-medium">
+                          {errors.city.message}
+                        </p>
                       )}
                     </div>
 
@@ -323,7 +336,9 @@ export default function CustomersPage() {
                       <Label htmlFor="zipCode">Zip Code</Label>
                       <Input id="zipCode" {...register("zipCode")} />
                       {errors.zipCode && (
-                        <p className="text-xs text-destructive font-medium">{errors.zipCode.message}</p>
+                        <p className="text-xs text-destructive font-medium">
+                          {errors.zipCode.message}
+                        </p>
                       )}
                     </div>
 
@@ -345,7 +360,9 @@ export default function CustomersPage() {
                   </div>
 
                   {errors.root?.message && (
-                    <p className="text-sm text-destructive font-medium">{errors.root.message}</p>
+                    <p className="text-sm text-destructive font-medium">
+                      {errors.root.message}
+                    </p>
                   )}
 
                   <DialogFooter>
@@ -359,7 +376,10 @@ export default function CustomersPage() {
                     >
                       Cancel
                     </Button>
-                    <Button type="submit" disabled={isSubmitting || createMutation.isPending}>
+                    <Button
+                      type="submit"
+                      disabled={isSubmitting || createMutation.isPending}
+                    >
                       {isSubmitting || createMutation.isPending
                         ? "Creating..."
                         : "Create Customer"}
@@ -413,7 +433,9 @@ export default function CustomersPage() {
                         <TableHead>Customer</TableHead>
                         <TableHead>Contact</TableHead>
                         <TableHead>Location</TableHead>
-                        <TableHead className="text-right">Credit Limit</TableHead>
+                        <TableHead className="text-right">
+                          Credit Limit
+                        </TableHead>
                         <TableHead className="w-[50px]"></TableHead>
                       </TableRow>
                     </TableHeader>
@@ -432,7 +454,8 @@ export default function CustomersPage() {
                                 </AvatarFallback>
                               </Avatar>
                               <div className="font-medium">
-                                {customer.firstName} {customer.middleName} {customer.lastName}
+                                {customer.firstName} {customer.middleName}{" "}
+                                {customer.lastName}
                               </div>
                             </div>
                           </TableCell>
@@ -452,15 +475,19 @@ export default function CustomersPage() {
                               <DropdownMenuContent align="end">
                                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
                                 <DropdownMenuItem asChild>
-                                  <Link href={`/customers/${customer.customerId}`}>
+                                  <Link
+                                    href={`/customers/${customer.customerId}`}
+                                  >
                                     <User className="mr-2 h-4 w-4" />
                                     View Details
                                   </Link>
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />
-                                <DropdownMenuItem 
+                                <DropdownMenuItem
                                   className="text-destructive focus:text-destructive"
-                                  onClick={() => setCustomerToDelete(customer.customerId)}
+                                  onClick={() =>
+                                    setCustomerToDelete(customer.customerId)
+                                  }
                                 >
                                   <Trash2 className="mr-2 h-4 w-4" />
                                   Delete Customer
@@ -476,19 +503,25 @@ export default function CustomersPage() {
               )}
             </CardContent>
           </Card>
-          
-          <AlertDialog open={!!customerToDelete} onOpenChange={(open) => !open && setCustomerToDelete(null)}>
+
+          <AlertDialog
+            open={!!customerToDelete}
+            onOpenChange={(open) => !open && setCustomerToDelete(null)}
+          >
             <AlertDialogContent>
               <AlertDialogHeader>
                 <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                 <AlertDialogDescription>
-                  This will permanently delete the customer account and remove their data from our servers.
+                  This will permanently delete the customer account and remove
+                  their data from our servers.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction 
-                  onClick={() => customerToDelete && deleteMutation.mutate(customerToDelete)}
+                <AlertDialogAction
+                  onClick={() =>
+                    customerToDelete && deleteMutation.mutate(customerToDelete)
+                  }
                   className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                 >
                   Delete

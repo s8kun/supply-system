@@ -1,3 +1,5 @@
+import { apiFetch } from "@/lib/api/client";
+
 type FulfillmentReportItem = {
   orderId: number;
   customerName: string;
@@ -79,8 +81,8 @@ function escapeHtml(value: string) {
 
 async function fetchFulfillmentReportToday(): Promise<FulfillmentReportPayload> {
   const today = new Date().toISOString().slice(0, 10);
-  const response = await fetch(
-    `/api/proxy/reports/fulfillment?fromDate=${today}&toDate=${today}`,
+  const response = await apiFetch(
+    `/reports/fulfillment?fromDate=${today}&toDate=${today}`,
     { cache: "no-store" },
   );
   const payload = await parseApiEnvelope<FulfillmentReportPayload>(response);

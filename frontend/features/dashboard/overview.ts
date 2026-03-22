@@ -1,4 +1,5 @@
 import type { Role } from "@/types/api";
+import { apiFetch } from "@/lib/api/client";
 
 type ApiEnvelope<T> = {
   status?: "success" | "error";
@@ -64,7 +65,7 @@ function asCollection<T>(payload: unknown): T[] {
 }
 
 async function getCollection<T>(path: string) {
-  const response = await fetch(`/api/proxy/${path}`, { cache: "no-store" });
+  const response = await apiFetch(`/${path}`, { cache: "no-store" });
   if (!response.ok) return [] as T[];
 
   const payload = await response.json();
@@ -72,7 +73,7 @@ async function getCollection<T>(path: string) {
 }
 
 async function getCustomerCredit() {
-  const response = await fetch("/api/auth/me", { cache: "no-store" });
+  const response = await apiFetch("/auth/me", { cache: "no-store" });
   if (!response.ok) return "0";
 
   const payload = (await response.json()) as AuthMeResponse;

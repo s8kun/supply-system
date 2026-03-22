@@ -16,6 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { getRoleHome } from "@/lib/auth/guards";
+import { apiFetch, setStoredSessionToken } from "@/lib/api/client";
 import { registerSchema, type RegisterValues } from "@/features/auth/schemas";
 import { useAuthSession } from "@/hooks/use-auth-session";
 
@@ -25,6 +26,7 @@ type RegisterResponse = {
     user: {
       role: "admin" | "supervisor" | "customer";
     };
+    token?: string;
   };
 };
 
@@ -55,13 +57,14 @@ export default function RegisterPage() {
 
   const onSubmit = handleSubmit(async (values) => {
     const accountName = `${values.firstName} ${values.lastName}`.trim();
-    const response = await fetch("/api/auth/register", {
+    const response = await apiFetch("/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         ...values,
         name: accountName,
       }),
+      withAuth: false,
     });
 
     const payload = await response.json();
@@ -76,6 +79,9 @@ export default function RegisterPage() {
     }
 
     const data = payload as RegisterResponse;
+    if (data.data.token) {
+      setStoredSessionToken(data.data.token);
+    }
     await refreshSession();
     router.replace(getRoleHome(data.data.user.role));
   });

@@ -1,3 +1,4 @@
+import { apiFetch, buildLaravelApiUrl, getStoredSessionToken } from "@/lib/api/client";
 import type { UserSummary } from "@/types/api";
 
 type ApiEnvelope<T> = {
@@ -199,7 +200,7 @@ export function formatDate(value: string | null) {
 }
 
 export async function fetchProducts() {
-  const response = await fetch("/api/proxy/products", { cache: "no-store" });
+  const response = await apiFetch("/products", { cache: "no-store" });
   const payload = await readPayload<ProductItem[] | { data: ProductItem[] }>(response);
 
   if (!response.ok) {
@@ -210,7 +211,7 @@ export async function fetchProducts() {
 }
 
 export async function fetchProduct(productId: number) {
-  const response = await fetch(`/api/proxy/products/${productId}`, { cache: "no-store" });
+  const response = await apiFetch(`/products/${productId}`, { cache: "no-store" });
   const payload = await readPayload<ProductItem>(response);
 
   if (!response.ok) {
@@ -226,7 +227,7 @@ export async function fetchProduct(productId: number) {
 }
 
 export async function fetchOrders() {
-  const response = await fetch("/api/proxy/orders", { cache: "no-store" });
+  const response = await apiFetch("/orders", { cache: "no-store" });
   const payload = await readPayload<OrderRecord[] | { data: OrderRecord[] }>(response);
 
   if (!response.ok) {
@@ -237,7 +238,7 @@ export async function fetchOrders() {
 }
 
 export async function fetchOrder(orderId: number) {
-  const response = await fetch(`/api/proxy/orders/${orderId}`, { cache: "no-store" });
+  const response = await apiFetch(`/orders/${orderId}`, { cache: "no-store" });
   const payload = await readPayload<OrderRecord>(response);
 
   if (!response.ok) {
@@ -253,7 +254,7 @@ export async function fetchOrder(orderId: number) {
 }
 
 export async function createOrder(input: CreateOrderInput) {
-  const response = await fetch("/api/proxy/orders", {
+  const response = await apiFetch("/orders", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -277,7 +278,7 @@ export async function createOrder(input: CreateOrderInput) {
 }
 
 export async function cancelOrder(orderId: number) {
-  const response = await fetch(`/api/proxy/orders/${orderId}/cancel`, {
+  const response = await apiFetch(`/orders/${orderId}/cancel`, {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -292,7 +293,7 @@ export async function cancelOrder(orderId: number) {
 }
 
 export async function redeemCustomerCode(input: { customerId: number; code: string }) {
-  const response = await fetch("/api/proxy/redeem-codes/redeem", {
+  const response = await apiFetch("/redeem-codes/redeem", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -316,7 +317,7 @@ export async function redeemCustomerCode(input: { customerId: number; code: stri
 }
 
 export async function fetchAuthProfile() {
-  const response = await fetch("/api/auth/me", { cache: "no-store" });
+  const response = await apiFetch("/auth/me", { cache: "no-store" });
   const payload = await readPayload<AuthMePayload>(response);
 
   if (!response.ok) {
@@ -349,8 +350,12 @@ export async function createProduct(input: CreateProductInput) {
   if (onUploadProgress) {
     const payload = await new Promise<ApiEnvelope<ProductItem> | null>((resolve, reject) => {
       const request = new XMLHttpRequest();
-      request.open("POST", "/api/proxy/products");
+      request.open("POST", buildLaravelApiUrl("/products"));
       request.setRequestHeader("Accept", "application/json");
+      const token = getStoredSessionToken();
+      if (token) {
+        request.setRequestHeader("Authorization", `Bearer ${token}`);
+      }
 
       request.upload.onprogress = (event) => {
         if (!event.lengthComputable) return;
@@ -392,7 +397,7 @@ export async function createProduct(input: CreateProductInput) {
     return product;
   }
 
-  const response = await fetch("/api/proxy/products", {
+  const response = await apiFetch("/products", {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -415,7 +420,7 @@ export async function createProduct(input: CreateProductInput) {
 }
 
 export async function fetchOrderItems() {
-  const response = await fetch("/api/proxy/order-items", { cache: "no-store" });
+  const response = await apiFetch("/order-items", { cache: "no-store" });
   const payload = await readPayload<OrderItem[] | { data: OrderItem[] }>(response);
 
   if (!response.ok) {
@@ -426,7 +431,7 @@ export async function fetchOrderItems() {
 }
 
 export async function fetchOrderItem(orderItemId: number) {
-  const response = await fetch(`/api/proxy/order-items/${orderItemId}`, {
+  const response = await apiFetch(`/order-items/${orderItemId}`, {
     cache: "no-store",
   });
   const payload = await readPayload<OrderItem>(response);
@@ -447,7 +452,7 @@ export async function updateOrderItemDeliveryStatus(
   orderItemId: number,
   deliveredQuantity: number,
 ) {
-  const response = await fetch(`/api/proxy/order-items/${orderItemId}`, {
+  const response = await apiFetch(`/order-items/${orderItemId}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
@@ -471,7 +476,7 @@ export async function updateOrderItemDeliveryStatus(
 }
 
 export async function markOrderPaid(orderId: number) {
-  const response = await fetch(`/api/proxy/orders/${orderId}/mark-paid`, {
+  const response = await apiFetch(`/orders/${orderId}/mark-paid`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -495,7 +500,7 @@ export async function markOrderPaid(orderId: number) {
 }
 
 export async function createRedeemCode(input: CreateRedeemCodeInput) {
-  const response = await fetch("/api/proxy/redeem-codes", {
+  const response = await apiFetch("/redeem-codes", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -519,7 +524,7 @@ export async function createRedeemCode(input: CreateRedeemCodeInput) {
 }
 
 export async function fetchCustomers() {
-  const response = await fetch("/api/proxy/customers", { cache: "no-store" });
+  const response = await apiFetch("/customers", { cache: "no-store" });
   const payload = await readPayload<CustomerProfile[] | { data: CustomerProfile[] }>(response);
 
   if (!response.ok) {
@@ -530,7 +535,7 @@ export async function fetchCustomers() {
 }
 
 export async function fetchCustomer(customerId: number) {
-  const response = await fetch(`/api/proxy/customers/${customerId}`, { cache: "no-store" });
+  const response = await apiFetch(`/customers/${customerId}`, { cache: "no-store" });
   const payload = await readPayload<CustomerProfile>(response);
 
   if (!response.ok) {
@@ -547,7 +552,7 @@ export async function fetchCustomer(customerId: number) {
 
 export async function createCustomer(input: CreateCustomerInput) {
   const accountName = `${input.firstName} ${input.lastName}`.trim();
-  const response = await fetch("/api/proxy/customers", {
+  const response = await apiFetch("/customers", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -574,7 +579,7 @@ export async function createCustomer(input: CreateCustomerInput) {
 }
 
 export async function updateCustomer(customerId: number, input: UpdateCustomerInput) {
-  const response = await fetch(`/api/proxy/customers/${customerId}`, {
+  const response = await apiFetch(`/customers/${customerId}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
@@ -598,7 +603,7 @@ export async function updateCustomer(customerId: number, input: UpdateCustomerIn
 }
 
 export async function deleteCustomer(customerId: number) {
-  const response = await fetch(`/api/proxy/customers/${customerId}`, {
+  const response = await apiFetch(`/customers/${customerId}`, {
     method: "DELETE",
     headers: {
       Accept: "application/json",
@@ -613,7 +618,7 @@ export async function deleteCustomer(customerId: number) {
 }
 
 export async function updateProduct(productId: number, input: UpdateProductInput) {
-  const response = await fetch(`/api/proxy/products/${productId}`, {
+  const response = await apiFetch(`/products/${productId}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
@@ -637,7 +642,7 @@ export async function updateProduct(productId: number, input: UpdateProductInput
 }
 
 export async function deleteProduct(productId: number) {
-  const response = await fetch(`/api/proxy/products/${productId}`, {
+  const response = await apiFetch(`/products/${productId}`, {
     method: "DELETE",
     headers: {
       Accept: "application/json",
@@ -652,7 +657,7 @@ export async function deleteProduct(productId: number) {
 }
 
 export async function updateOrder(orderId: number, input: UpdateOrderInput) {
-  const response = await fetch(`/api/proxy/orders/${orderId}`, {
+  const response = await apiFetch(`/orders/${orderId}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
@@ -676,7 +681,7 @@ export async function updateOrder(orderId: number, input: UpdateOrderInput) {
 }
 
 export async function deleteOrder(orderId: number) {
-  const response = await fetch(`/api/proxy/orders/${orderId}`, {
+  const response = await apiFetch(`/orders/${orderId}`, {
     method: "DELETE",
     headers: {
       Accept: "application/json",
@@ -691,7 +696,7 @@ export async function deleteOrder(orderId: number) {
 }
 
 export async function fetchReorderNotices() {
-  const response = await fetch("/api/proxy/reorder-notices", { cache: "no-store" });
+  const response = await apiFetch("/reorder-notices", { cache: "no-store" });
   const payload = await readPayload<ReorderNotice[] | { data: ReorderNotice[] }>(response);
 
   if (!response.ok) {
@@ -702,7 +707,7 @@ export async function fetchReorderNotices() {
 }
 
 export async function fetchReorderNotice(reorderNoticeId: number) {
-  const response = await fetch(`/api/proxy/reorder-notices/${reorderNoticeId}`, {
+  const response = await apiFetch(`/reorder-notices/${reorderNoticeId}`, {
     cache: "no-store",
   });
   const payload = await readPayload<ReorderNotice>(response);
