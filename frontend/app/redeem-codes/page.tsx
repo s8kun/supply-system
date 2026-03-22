@@ -23,7 +23,7 @@ import {
   redeemCustomerCode,
 } from "@/features/customer/api";
 import { toast } from "sonner";
-import { Gift, CreditCard, Copy, Check } from "lucide-react";
+import { Gift, CreditCard, Copy } from "lucide-react";
 
 export default function RedeemCodesPage() {
   const queryClient = useQueryClient();

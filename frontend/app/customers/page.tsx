@@ -76,7 +76,7 @@ const createCustomerSchema = z
     streetName: z.string().min(1, "Street name is required"),
     city: z.string().min(1, "City is required"),
     zipCode: z.string().min(1, "Zip code is required"),
-    creditLimit: z.coerce.number().min(0, "Credit limit must be 0 or greater"),
+    creditLimit: z.number().min(0, "Credit limit must be 0 or greater"),
   })
   .refine((value) => value.password === value.passwordConfirmation, {
     path: ["passwordConfirmation"],
@@ -212,7 +212,7 @@ export default function CustomersPage() {
                   New Customer
                 </Button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-[720px] max-h-[90vh] overflow-y-auto">
+              <DialogContent className="sm:max-w-180 max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
                   <DialogTitle>Create Customer Account</DialogTitle>
                   <DialogDescription>
@@ -349,7 +349,7 @@ export default function CustomersPage() {
                         type="number"
                         min={0}
                         step="0.01"
-                        {...register("creditLimit")}
+                        {...register("creditLimit", { valueAsNumber: true })}
                       />
                       {errors.creditLimit && (
                         <p className="text-xs text-destructive font-medium">

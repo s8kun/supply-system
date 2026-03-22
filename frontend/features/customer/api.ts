@@ -21,6 +21,7 @@ export type CustomerProfile = {
   };
   phone: string;
   creditLimit: number | string;
+  role?: string;
   createdAt: string | null;
   updatedAt: string | null;
 };

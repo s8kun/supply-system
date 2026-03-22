@@ -17,12 +17,6 @@ type StatCardProps = {
   tone?: "default" | "warning" | "success";
 };
 
-const toneClassMap: Record<NonNullable<StatCardProps["tone"]>, string> = {
-  default: "text-muted-foreground",
-  warning: "text-amber-600",
-  success: "text-emerald-600",
-};
-
 export function StatCard({
   title,
   value,
