@@ -23,7 +23,7 @@ It provides role-based dashboards and workflows for:
 
 ## Key Features
 
-- Authentication via backend Sanctum token (stored in browser `localStorage`)
+- Authentication via backend Sanctum token (stored in browser cookies)
 - Role-aware routing and dashboards
 - Customer profile and credit visibility
 - Product browsing and management flows
@@ -101,7 +101,7 @@ http://localhost:3000
 ## Backend Integration Notes
 
 - Frontend calls Laravel endpoints directly using `NEXT_PUBLIC_LARAVEL_API_URL`.
-- Auth token is saved as `scs_access_token` in browser `localStorage`.
+- Auth token is saved as `scs_access_token` in browser cookies.
 - Protected requests send `Authorization: Bearer <token>` from the client.
 
 ---

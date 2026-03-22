@@ -3,7 +3,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { AppProviders } from "@/components/providers/app-providers";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
-import { CookiesProvider } from "react-cookie";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -33,12 +32,10 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
         <AppProviders>
-          <CookiesProvider>
-            <TooltipProvider>
-              {children}
-              <Toaster />
-            </TooltipProvider>
-          </CookiesProvider>
+          <TooltipProvider>
+            {children}
+            <Toaster />
+          </TooltipProvider>
         </AppProviders>
       </body>
     </html>
