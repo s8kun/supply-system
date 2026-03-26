@@ -104,6 +104,23 @@ http://localhost:3000
 ```
 
 ---
+## Demo Accounts
+
+  - Admin Account:
+       * Email: admin@smartsupply.com
+       * Password: password123
+       * Role: admin
+   -  Supervisor Account:
+       * Email: supervisor@smartsupply.com
+       * Password: password123
+       * Role: supervisor
+   -  Customer Account:
+       * Email: customer@smartsupply.com
+       * Password: password123
+       * Role: customer
+
+
+---
 
 ## Documentation
 
